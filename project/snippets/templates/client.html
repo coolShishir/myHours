@@ -1,0 +1,31 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  </head>
+  <body>
+    <br>
+    <br> You are client
+     <button type="button" onclick="Logout()" class="btn btn-info">Logout</button>
+
+    <script>
+      function Logout() {
+       console.log("temp")
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          headers: {
+           'Authorization' : 'Token ' + token
+          },
+          url: "http://localhost:8000/snippets/userlogout",
+          success: function(data) {
+            console.log("posted");
+             window.location="http://localhost:8000/snippets/hello";
+             }
+          })
+        }
+    </script>
+  </body>
+</html>

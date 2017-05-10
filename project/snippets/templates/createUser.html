@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <style>
+
+     body {
+        background-image: url("http://wallpapercave.com/wp/GProxpt.jpg");
+      }
+      #outPopUp {
+        position: absolute;
+        width: 300px;
+        height: 200px;
+        z-index: 15;
+        top: 30%;
+        left: 50%;
+        margin: -100px 0 0 -150px;
+      }
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js">
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  </head>
+  <body>
+    <br>
+    <div id = "outPopUp">
+      <h3> Create New Employee </h3>
+          Username:<br>
+          <input type="text" name="username"><br>
+          Password<br>
+          <input type="password" name="password"><br>
+          Firstname:<br>
+          <input type="name" name="firstname"><br>
+          Lastname:<br>
+          <input type="name" name="lastname"><br>
+          Email<br>
+          <input type="text" name="email"><br>
+          <br>
+      <button type="button" onclick="CreateUser()" class="btn btn-info">Create User</button>
+    </div>
+    <script>
+    token = ""
+    token = localStorage.getItem("token");
+    console.log(token)
+
+    function CreateUser(){
+        var Username = document.getElementsByName("username");
+        var FirstName  = document.getElementsByName("firstname");
+        var LastName = document.getElementsByName("lastname");
+        var Password = document.getElementsByName("password");
+        var email = document.getElementsByName("email");
+
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+          headers: {
+           'Authorization' : 'Token ' + token
+          },
+          data: { username : Username[0].value , first_name : FirstName[0].value,
+                  last_name : LastName[0].value , password : Password[0].value,
+                  email : email[0].value
+                   },
+          url: "http://localhost:8000/snippets/userinstance",
+          success: function(data) {
+            console.log("posted");
+             }
+          })
+      }
+
+    </script>
+  </body>
+</html>

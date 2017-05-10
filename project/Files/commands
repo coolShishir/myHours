@@ -1,0 +1,11 @@
+sudo lsof -t -i tcp:8000 | xargs kill -9
+"auth_token": "4653926b139b816ec607e7825b12ad14152349d7"  //new2 Temp@123
+
+sample json 
+{
+    "title" : "temp" ,
+    "noOfHoursSpent" : "temp" ,
+    "noOfHoursEstimated" : "temp",
+    "lastBuildDate" : "temp",
+    "nextBuildDate" : "temp"
+}

@@ -1,0 +1,313 @@
+<html>
+
+  <head>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+	<link href='http://fonts.googleapis.com/css?family=Cookie' rel='stylesheet' type='text/css'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Simple Sidebar - Start Bootstrap Template</title>
+      <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <link rel="stylesheet" href="https://unpkg.com/purecss@0.6.2/build/pure-min.css"
+            integrity="sha384-UQiGfs9ICog+LwheBSRCt1o5cbyKIHbwjWscjemyBMT9YCUMZffs6UqUTd0hObXD" crossorigin="anonymous">
+  </head>
+  <body>
+
+<div class="navbar navbar-fixed-top navbar-default">
+  	<div class="container">
+      <div class="navbar-header"><a class="navbar-brand" href="#">Project-Client System</a><a class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="glyphicon glyphicon-bar"></span>
+          <span class="glyphicon glyphicon-bar"></span>
+          <span class="glyphicon glyphicon-bar"></span>
+        </a>
+      </div>
+        <div class="navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"> <a onclick="FetchProjects()">Home</a>
+                </li>
+                <li><a onclick="FetchUsers('E','showEmployees')">Employees</a>
+                </li>
+                <li><a onclick="FetchUsers('C','showClients')">Clients</a>
+                </li>
+                <li><a onclick="FetchUsers('A','showAdmins')">Admins</a>
+                </li>
+                <li><a onclick="Logout()" style = "float: right;">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+    <br>
+    <br>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="sidebar-nav-fixed affix">
+                <div class="well">
+                    <ul class="nav ">
+                        <li class="nav-header">Sidebar</li>
+                        <br>
+                        <li class="active"><a href="#">Link</a>
+                        </li>
+                        <li><a href="#">Link</a>
+                        </li>
+                        <li><a href="#">Link</a>
+                        </li>
+                        <li><a href="#">Link</a>
+                        </li>
+                        <li class="nav-header">Sidebar</li>
+
+                    </ul>
+                </div>
+                <!--/.well -->
+            </div>
+            <!--/sidebar-nav-fixed -->
+        </div>
+        <!--/span-->
+        <div class="col-md-6">
+            <div class="jumbotron">
+                <p id = 'showAdmins' style="font-size:8px"></p>
+                <p id = 'showProjects'></p>
+                <p id = 'showEmployees'></p>
+                <p id = 'showClients'></p>
+                </p>
+            </div>
+    </div>
+</div>
+<!--/.fluid-container-->
+
+    <script>
+      token = ""
+      usertype = ""
+      token = localStorage.getItem("token");
+      usertype = localStorage.getItem("usertype");
+      function FetchProjects() {
+       $.ajax({
+         type: "GET",
+         dataType: "json",
+         headers: {
+           'Authorization' : 'Token ' + token
+         },
+         url: "http://localhost:8000/snippets/projectlist",
+         success: function(data) {
+             console.log(token)
+             console.log(data[0][0].created)
+             x = data[0]
+              var json = data[0]
+              console.log(data[0])
+              CreateTableFromJSON(data[0],'showProjects')
+            }
+        })
+      }
+
+      function FetchUsers(type) {
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          headers: {
+           'Authorization' : 'Token ' + token
+          },
+          url: "http://localhost:8000/snippets/userslist",
+          data: { user_type : type },
+          success: function(data) {
+            console.log("posted");
+            console.log(data)
+            console.log(data[0])
+              var json = data[0]
+              for ( var i = 0 ; i < json.length ; i++ ) {
+                console.log(json[i].username)
+              }
+              if ( type == 'C')
+              CreateTableFromJSON(data[0],'showClients')
+
+              if ( type == 'E')
+              CreateTableFromJSON(data[0],'showEmployees')
+
+              if ( type == 'A')
+              CreateTableFromJSON(data[0],'showAdmins')
+
+             }
+          })
+        }
+
+       function Logout() {
+       console.log("temp")
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          headers: {
+           'Authorization' : 'Token ' + token
+          },
+          url: "http://localhost:8000/snippets/userlogout",
+          success: function(data) {
+             localStorage.clear();
+            console.log("posted");
+             window.location="http://localhost:8000/snippets/hello";
+             }
+          })
+        }
+
+        function GetCLient() {
+        var cid = document.getElementsByName("clientId");
+        console.log(cid[0].value)
+        $.ajax({
+          type: "GET",
+          dataType: "json",
+          headers: {
+           'Authorization' : 'Token ' + token
+          },
+          url: "http://localhost:8000/snippets/userinstance?Id=" + cid[0].value ,
+          data: {},
+          success: function(data) {
+            console.log("posted");
+            console.log(data)
+            var json = data[0]
+            console.log(json)
+            var ul = $(".myclass")
+            console.log(json.username)
+-            ul.html(json.username);
+             }
+          })
+        }
+
+        function CreateProject() {
+           window.location="http://localhost:8000/snippets/createProject";
+        }
+
+        function CreateEmployee() {
+           window.location="http://localhost:8000/snippets/createEmployee";
+        }
+
+        function DeleteUser() {
+           window.location="http://localhost:8000/snippets/deleteuser";
+        }
+
+         function EditProject() {
+           window.location="http://localhost:8000/snippets/editproject";
+        }
+
+        function SetStatus(pid, pstatus) {
+        <!--var pid = document.getElementsByName("projectid");-->
+        <!--var pstatus = document.getElementsByName("projectstatus");-->
+
+        <!--pid = pid[0].data-->
+        <!--pstatus = pstatus[0].data-->
+        <!--console.log(pid)-->
+        <!--console.log(pstatus)-->
+        console.log("in Function")
+        $.ajax({
+          type: "POST",
+          dataType: "json",
+           headers: {
+           'Authorization' : 'Token ' + token
+          },
+          data: { id: pid , status: pstatus },
+          url: "http://localhost:8000/snippets/projectstatus",
+          success: function(data) {
+            console.log("posted");
+             }
+          })
+        }
+
+      function Delete() {
+        $.ajax({
+          type: "DELETE",
+          dataType: "json",
+           headers: {
+           'Authorization' : 'Token ' + token
+          },
+          data: {Id : "57b70b98d3ca4908ab052ce4c32b8da7"},
+          url: "http://localhost:8000/snippets/userinstance",
+          success: function(data) {
+            console.log("posted");
+             }
+          })
+      }
+
+      function CreateTableFromJSON(data,divId) {
+        var col = [];
+        console.log(divId)
+        if ( divId == "showProjects" ) {
+          console.log("Show Projects")
+          col.push("Id");
+          col.push("Created");
+          col.push("Title");
+          col.push("Hours Spent");
+          col.push("Hours Estimated");
+          col.push("Last Build Date");
+          col.push("Next Build Date");
+         }
+        else  {
+          col.push("Id");
+          col.push("Username");
+          col.push("First Name");
+          col.push("Last Name");
+          col.push("User Type");
+          col.push("Email");
+        }
+
+        var col2 = [];
+        for (var i = 0; i < data.length; i++) {
+            for (var key in data[i]) {
+                if (col2.indexOf(key) === -1) {
+                    col2.push(key);
+                }
+            }
+        }
+
+        var table = document.createElement("table");
+        table.className = "pure-table pure-table-bordered";
+        var tr = table.insertRow(-1);
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+
+          var th = document.createElement("th");
+          th.innerHTML = "Action";
+          tr.appendChild(th);
+
+
+        for (var i = 0; i < data.length; i++) {
+            tr = table.insertRow(-1);
+            for (var j = 0; j < col.length; j++) {
+              var td = document.createElement("td");
+              td.innerHTML = data[i][col2[j]];
+              console.log(data[i][col2[j]])
+              tr.appendChild(td);
+            }
+            console.log(divId)
+
+            var td = document.createElement("td");
+            td.innerHTML = "<button class=" +'"pure-button"' + " " + "onclick()" + "=" + '"Temp()"' + ">Delete</button>"
+            + " <button class=" +'"pure-button"' + " " + "onclick()" + "=" + '"Temp()"' + ">Edit</button>"
+            + " <button class=" +'"pure-button"' + " " + "onclick()" + "=" + '"Temp()"' + ">Fetch Details</button>"
+            tr.appendChild(td);
+        }
+
+        var divContainer = document.getElementById(divId);
+        console.log(divContainer)
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+    }
+
+    function Temp() {
+       console.log("status set")
+     }
+
+    </script>
+  </body>
+</html>
